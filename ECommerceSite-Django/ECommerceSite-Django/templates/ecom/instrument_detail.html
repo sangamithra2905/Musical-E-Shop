@@ -1,0 +1,106 @@
+<!-- templates/instrument_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ instrument.name }}</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        main {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        iframe {
+            display: block;
+            margin: 20px 0;
+            border: none;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #333;
+            color: #fff;
+            position: relative;
+            margin-top: 20px;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Musical E-Shop</h1>
+    </header>
+    <main>
+        <section>
+            <h2>{{ instrument.name }}</h2>
+            <p>{{ instrument.description }}</p>
+            <p>Price: ${{ instrument.price }}</p>
+            
+            <h3>Learn to Play:</h3>
+            <iframe width="560" height="315" src="{{ instrument.video_url }}" 
+                    allow="accelerometer; autoplay; clipboard-write; 
+                    encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
+        </section>
+        
+        <section>
+            <h3>Purchase</h3>
+            <form action="{% url 'purchase' instrument.id %}" method="post">  <!-- Adjust the URL pattern -->
+                {% csrf_token %}
+                <button type="submit">Buy Now</button>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Musical E-Shop</p>
+    </footer>
+</body>
+</html>

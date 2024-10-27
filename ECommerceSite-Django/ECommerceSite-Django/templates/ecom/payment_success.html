@@ -1,0 +1,181 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+
+{% block content %}
+<style media="screen">
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+body {
+    background-color: #f7f7f7;
+}
+
+.container {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 0.10rem;
+}
+
+.track {
+    background-color: #ddd;
+    height: 7px;
+    display: flex;
+    margin-bottom: 60px;
+    margin-top: 50px;
+}
+
+.track .step.active:before {
+    background: #05a134;
+}
+
+.track .step.active .icon {
+    background: #038a2c;
+    color: #fff;
+}
+
+.track .icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 100%;
+    background: #ddd;
+}
+
+.track .text {
+    display: block;
+    margin-top: 7px;
+}
+
+ul.row,
+ul.row-sm {
+    list-style: none;
+    padding: 0;
+}
+
+.itemside .aside {
+    flex-shrink: 0;
+}
+
+.img-sm {
+    width: 80px;
+    height: 80px;
+    padding: 7px;
+}
+
+.btn-warning {
+    color: #ffffff;
+    background-color: #ee5435;
+}
+
+.btn-warning:hover {
+    background-color: #ff2b00;
+}
+
+.success-page {
+    text-align: center;
+    padding: 50px;
+}
+
+.success-page h2 {
+    font-size: 30px;
+    color: green;
+}
+
+.success-page img.center {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+}
+</style>
+
+<div class="container">
+    <header class="card-header" style="text-align:center; font-size: 21px"> My Orders / Tracking </header>
+
+    {% for products,order in data %}
+    <article class="card">
+        <div class="card-body">
+            <ul class="row" style="margin-left:20px;margin-top:20px;">
+                <li class="col-md-4">
+                    <figure class="itemside mb-3">
+                        {% for product in products %}
+                        <div class="aside">
+                            <img src="{% static product.product_image.url %}" class="img-sm border">
+                        </div>
+                        <figcaption class="info align-self-center">
+                            <p class="title"><strong>Name : </strong>{{product.name}} <br> 
+                            <strong>Description : </strong>{{product.description}} <br> 
+                            <strong>Price : </strong>${{product.price}}</p>
+                        </figcaption>
+                        {% endfor %}
+                    </figure>
+                </li>
+                <li class="col-md-4">
+                    <div class="col">
+                        <strong>Shipment Address:</strong> <br> {{order.address}}
+                    </div>
+                </li>
+                <li class="col-md-4">
+                    <div class="col">
+                        <strong>Status:</strong> <br>
+                        {% if order.status == 'Pending' %}
+                        <span class="label label-info" style="font-size: 12px; border-radius: 30px;">{{order.status}}</span>
+                        {% elif order.status == 'Delivered' %}
+                        <span class="label label-success" style="font-size: 12px; border-radius: 30px;">{{order.status}}</span>
+                        {% elif order.status == 'Out for Delivery' %}
+                        <span class="label label-default" style="font-size: 12px; border-radius: 30px;">{{order.status}}</span>
+                        {% else %}
+                        <span class="label label-primary" style="font-size: 12px; border-radius: 30px;">{{order.status}}</span>
+                        {% endif %}
+                    </div>
+                    <br>
+                    <h4><a style="text-decoration:none;" href="{% url 'download-invoice' order.id product.id %}">
+                        <button class="btn btn-danger btn-sm">Download Invoice</button></a></h4>
+                </li>
+            </ul>
+            <hr>
+
+            <div class="track">
+                {% if order.status == 'Pending' %}
+                <div class="step active"> <span class="icon"> <i class="fa fa-spinner"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step"> <span class="icon"> <i class="fa fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {% elif order.status == 'Order Confirmed' %}
+                <div class="step active"> <span class="icon"> <i class="fa fa-spinner"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step"> <span class="icon"> <i class="fa fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {% elif order.status == 'Out for Delivery' %}
+                <div class="step active"> <span class="icon"> <i class="fa fa-spinner"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step"> <span class="icon"> <i class="fa fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {% else %}
+                <div class="step active"> <span class="icon"> <i class="fa fa-spinner"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step active"> <span class="icon"> <i class="fa fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    <br>
+    {% endfor %}
+
+    <!-- Payment Success Section -->
+    <div class="success-page">
+        <img src="{% static 'images/success.png' %}" class="center" alt="Success" />
+        <h2>Payment Successful!</h2>
+        <p>We are delighted to inform you that we received your payment.</p>
+        <h3 style="color: green;">🎉 Congratulations, your video is now unlocked! 🎉</h3>
+        <p>You can view your unlocked video in the <a href="/my-order">My Orders</a> section.</p>
+        <a href="/my-order" class="btn btn-success btn-lg">View Orders/Track Orders</a>
+        <a href="/customer-home" class="btn btn-primary btn-lg">Continue Shopping</a>
+    </div>
+</div>
+<br><br><br><br><br>
+{% endblock content %}
